@@ -15,7 +15,8 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _index = 0;
-  final _pages = [
+
+  final List<Widget> _pages = [
     const HomeScreen(),
     const QuotesScreen(),
     const AgendaScreen(),
@@ -27,20 +28,52 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_index],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _index,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.darkBg,
-        selectedItemColor: AppColors.accentPurple,
-        unselectedItemColor: Colors.grey,
-        onTap: (i) => setState(() => _index = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.format_quote), label: "Quotes"),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Agenda"),
-          BottomNavigationBarItem(icon: Icon(Icons.check_circle), label: "Tasks"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Stats"),
-        ],
+      // We wrap the BottomNavigationBar in a Container or Theme to style the background
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.white.withOpacity(0.05), width: 0.5),
+          ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _index,
+          onTap: (i) => setState(() => _index = i),
+          type: BottomNavigationBarType.fixed,
+          
+          // --- MAKING THE COLOR DISTINCT ---
+          // Using a slightly lighter grey/navy than the primaryBg (0xFF0D0F14)
+          backgroundColor: const Color(0xFF161922), 
+          
+          selectedItemColor: AppColors.accentPurple,
+          unselectedItemColor: Colors.white30,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_filled),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.format_quote_rounded),
+              label: 'Quotes',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today_rounded),
+              label: 'Agenda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment_turned_in_rounded),
+              label: 'Tasks',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_rounded),
+              label: 'Stats',
+            ),
+          ],
+        ),
       ),
     );
   }

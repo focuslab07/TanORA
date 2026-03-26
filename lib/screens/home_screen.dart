@@ -17,12 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryBg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text("TanOra", style: AppStyles.heading),
-        actions: [
-          const Padding(
+        actions: const [
+          Padding(
             padding: EdgeInsets.only(right: 16.0),
             child: Icon(Icons.auto_awesome, color: AppColors.accentPurple),
           ),
@@ -71,6 +72,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // --- REFINED MOTIVATION SECTION WITH BACKGROUND IMAGE ---
+  Widget _buildMoodSection() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        image: const DecorationImage(
+          // Ensure you have an image at this path or use a NetworkImage to test
+          image: AssetImage('assets/motivation_bg.jpg'), 
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: GlassContainer(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text(currentEmoji, style: const TextStyle(fontSize: 35)),
+            const SizedBox(height: 12),
+            Text(
+              currentQuote,
+              textAlign: TextAlign.center,
+              // Enhanced visibility using v1.2 subHeading as base
+              style: AppStyles.subHeading.copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.bold, // More visible
+                fontStyle: FontStyle.italic,
+                shadows: const [
+                  Shadow(
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 4.0,
+                    color: Colors.black, // Makes text pop against background
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _moodBtn("😞", "Difficulties are just tests."),
+                _moodBtn("😐", "Stay focused on the goal."),
+                _moodBtn("😊", "You're doing great!"),
+                _moodBtn("🤩", "Let's innovate today!"),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _moodBtn(String emoji, String quote) {
+    return GestureDetector(
+      onTap: () => setState(() { currentEmoji = emoji; currentQuote = quote; }),
+      child: Text(emoji, style: const TextStyle(fontSize: 22)),
+    );
+  }
+
   Widget _sectionHeader(String title, {required VoidCallback onMore}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -86,7 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: AppColors.accentPurple.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text("See all", style: TextStyle(color: AppColors.accentPurple, fontSize: 12, fontWeight: FontWeight.bold)),
+              child: const Text(
+                "See all", 
+                style: TextStyle(color: AppColors.accentPurple, fontSize: 12, fontWeight: FontWeight.bold)
+              ),
             ),
           ),
         ],
@@ -109,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Container(width: 20, height: 3, color: color),
             const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white), overflow: TextOverflow.ellipsis),
             Text(time, style: const TextStyle(fontSize: 11, color: Colors.white70)),
             Text(date, style: const TextStyle(fontSize: 10, color: Colors.grey)),
           ],
@@ -127,11 +188,16 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(task, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+            Text(task, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white), overflow: TextOverflow.ellipsis),
             Text(timeLeft, style: const TextStyle(color: Colors.redAccent, fontSize: 10, fontWeight: FontWeight.bold)),
             Text(exactDate, style: const TextStyle(color: Colors.white38, fontSize: 9)),
             const SizedBox(height: 6),
-            LinearProgressIndicator(value: progress, color: AppColors.accentPurple, minHeight: 2),
+            LinearProgressIndicator(
+              value: progress, 
+              color: AppColors.accentPurple, 
+              minHeight: 2,
+              backgroundColor: Colors.white10,
+            ),
           ],
         ),
       ),
@@ -146,39 +212,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(icon, color: color, size: 20),
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-          Text(activity, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          Text(activity, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
           Text(val, style: TextStyle(color: color, fontSize: 11)),
         ],
       ),
-    );
-  }
-
-  Widget _buildMoodSection() {
-    return GlassContainer(
-      child: Column(
-        children: [
-          Text(currentEmoji, style: const TextStyle(fontSize: 30)),
-          const SizedBox(height: 10),
-          Text(currentQuote, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic)),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _moodBtn("😞", "Difficulties are just tests."),
-              _moodBtn("😐", "Stay focused on the goal."),
-              _moodBtn("😊", "You're doing great!"),
-              _moodBtn("🤩", "Let's innovate today!"),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _moodBtn(String emoji, String quote) {
-    return GestureDetector(
-      onTap: () => setState(() { currentEmoji = emoji; currentQuote = quote; }),
-      child: Text(emoji, style: const TextStyle(fontSize: 22)),
     );
   }
 }
