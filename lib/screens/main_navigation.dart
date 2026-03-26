@@ -8,13 +8,20 @@ import 'stats_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
+
   @override
   State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
   int _index = 0;
-  final _pages = [const HomeScreen(), const QuotesScreen(), const AgendaScreen(), const TasksScreen(), const StatsScreen()];
+  final _pages = [
+    const HomeScreen(),
+    const QuotesScreen(),
+    const AgendaScreen(),
+    const TasksScreen(),
+    const StatsScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {

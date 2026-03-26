@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Dark Mode - Deep & Cozy
-  static const darkBg = Color(0xFF0D0F14);
-  static const darkGlass = Color(0x1AFFFFFF);
-
-  // Light Mode - Soft & Airy
-  static const lightBg = Color(0xFFF8F9FD);
-  static const lightGlass = Color(0x1A000000);
-
-  // Accents
+  static const primaryBg = Color(0xFF0D0F14);
+  static const darkBg = Color(0xFF0D0F14); // Added for navigation compatibility
   static const accentPurple = Color(0xFF9D8BFF);
-  static const softOrange = Color(0xFFFFB38A);
-  static const softRed = Color(0xFFFF8A8A);
+  static const glassWhite = Color(0x1AFFFFFF);
 }
 
 class AppStyles {
-  static TextStyle heading(BuildContext context) => TextStyle(
-    fontSize: 26, 
+  static const heading = TextStyle(
+    fontSize: 24, 
     fontWeight: FontWeight.bold, 
-    color: Theme.of(context).textTheme.titleLarge?.color,
+    color: Colors.white,
   );
 
-  static TextStyle cardTitle(BuildContext context) => TextStyle(
-    fontSize: 17, 
+  static const subHeading = TextStyle(
+    fontSize: 14, 
+    color: Colors.white70,
+  );
+
+  static const cardTitle = TextStyle(
+    fontSize: 16, 
     fontWeight: FontWeight.w600, 
-    color: Theme.of(context).textTheme.titleLarge?.color,
+    color: Colors.white,
   );
 }

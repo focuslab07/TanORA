@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import '../core/constants.dart';
 
 class AgendaScreen extends StatelessWidget {
@@ -8,22 +7,29 @@ class AgendaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: AppColors.primaryBg,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text("Agenda", style: AppStyles.heading),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TableCalendar(
-              focusedDay: DateTime(2026, 3, 26),
-              firstDay: DateTime(2026, 1, 1),
-              lastDay: DateTime(2026, 12, 31),
-              calendarStyle: const CalendarStyle(
-                todayDecoration: BoxDecoration(color: AppColors.accentPurple, shape: BoxShape.circle),
-                selectedDecoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              ),
-              headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+            const Text(
+              "Tasks for March 26 listed here...", 
+              style: AppStyles.subHeading,
             ),
-            const Expanded(
-              child: Center(child: Text("Tasks for March 26 listed here...", style: AppStyles.subHeading)),
-            )
+            const SizedBox(height: 20),
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: AppColors.glassWhite,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: const Center(child: Text("Calendar Placeholder", style: TextStyle(color: Colors.white))),
+            ),
           ],
         ),
       ),
