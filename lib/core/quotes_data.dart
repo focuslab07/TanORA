@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Quote {
   final String text;
   final String category;
@@ -10,11 +13,60 @@ class Quote {
     this.isFavorite = false,
     this.isUserCreated = false,
   });
+
+  Map<String, dynamic> toJson() => {
+    'text': text,
+    'category': category,
+    'isFavorite': isFavorite,
+    'isUserCreated': isUserCreated,
+  };
+
+  factory Quote.fromJson(Map<String, dynamic> json) => Quote(
+    text: json['text'],
+    category: json['category'],
+    isFavorite: json['isFavorite'] ?? false,
+    isUserCreated: json['isUserCreated'] ?? false,
+  );
+}
+
+class AppEvent {
+  final String title;
+  final String description;
+  final DateTime date;
+  final String time;
+  final bool reminder;
+
+  AppEvent({
+    required this.title, 
+    required this.description, 
+    required this.date, 
+    required this.time, 
+    required this.reminder
+  });
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'description': description,
+    'date': date.toIso8601String(),
+    'time': time,
+    'reminder': reminder,
+  };
+
+  factory AppEvent.fromJson(Map<String, dynamic> json) => AppEvent(
+    title: json['title'],
+    description: json['description'],
+    date: DateTime.parse(json['date']),
+    time: json['time'],
+    reminder: json['reminder'] ?? false,
+  );
 }
 
 class QuotesData {
+  static List<Quote> userQuotes = [];
+  static Map<DateTime, List<AppEvent>> events = {};
+  
   static List<Quote> allQuotes = [
-    // --- HAPPY (40 Quotes) ---
+    // --- HAPPY (40) ---
     Quote(text: "Happiness is not by chance, but by choice.", category: "Happy"),
     Quote(text: "The most important thing is to enjoy your life.", category: "Happy"),
     Quote(text: "Keep your face to the sunshine and you cannot see a shadow.", category: "Happy"),
@@ -33,7 +85,7 @@ class QuotesData {
     Quote(text: "Think of all the beauty still left around you and be happy.", category: "Happy"),
     Quote(text: "Gratitude turns what we have into enough.", category: "Happy"),
     Quote(text: "A joyful heart is good medicine.", category: "Happy"),
-    Quote(text: "Happiness is when what you think, what you say, and what you do are in harmony.", category: "Happy"),
+    Quote(text: "Happiness is when what you think and do are in harmony.", category: "Happy"),
     Quote(text: "Find joy in the ordinary.", category: "Happy"),
     Quote(text: "Do more of what makes you happy.", category: "Happy"),
     Quote(text: "The secret of happiness is freedom.", category: "Happy"),
@@ -56,7 +108,7 @@ class QuotesData {
     Quote(text: "Be the reason someone smiles today.", category: "Happy"),
     Quote(text: "Keep going, keep growing.", category: "Happy"),
 
-    // --- SAD / ENCOURAGEMENT (30 Quotes) ---
+    // --- SAD / ENCOURAGEMENT (30) ---
     Quote(text: "Hard times always lead to something great.", category: "Sad"),
     Quote(text: "Every tall tree was once a small seed.", category: "Sad"),
     Quote(text: "Rain falls because the clouds can no longer handle the weight.", category: "Sad"),
@@ -72,7 +124,7 @@ class QuotesData {
     Quote(text: "Broken crayons still color.", category: "Sad"),
     Quote(text: "You are stronger than you think.", category: "Sad"),
     Quote(text: "One day at a time.", category: "Sad"),
-    Quote(text: "Deep breaths are like little love notes to your body.", category: "Sad"),
+    Quote(text: "Deep breaths are love notes to your body.", category: "Sad"),
     Quote(text: "Your feelings are valid.", category: "Sad"),
     Quote(text: "Storms don't last forever.", category: "Sad"),
     Quote(text: "After the rain, comes the rainbow.", category: "Sad"),
@@ -88,7 +140,7 @@ class QuotesData {
     Quote(text: "Light will find you.", category: "Sad"),
     Quote(text: "Hope is a waking dream.", category: "Sad"),
 
-    // --- FOCUS / INNOVATION (30 Quotes) ---
+    // --- FOCUS / INNOVATION (30) ---
     Quote(text: "Stay focused on the goal.", category: "Focus"),
     Quote(text: "Innovation distinguishes between a leader and a follower.", category: "Focus"),
     Quote(text: "Code is like humor. If you explain it, it's bad.", category: "Focus"),
@@ -120,6 +172,49 @@ class QuotesData {
     Quote(text: "Master your craft.", category: "Focus"),
     Quote(text: "The only limit is your mind.", category: "Focus"),
   ];
+
+  static Future<void> savePersistentData() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Save Quotes
+    await prefs.setString('user_quotes', jsonEncode(userQuotes.map((q) => q.toJson()).toList()));
+    List<String> favList = allQuotes.where((q) => q.isFavorite).map((q) => q.text).toList();
+    await prefs.setStringList('fav_quotes', favList);
+
+    // Save Agenda Events
+    Map<String, dynamic> eventsJson = {};
+    events.forEach((key, value) {
+      eventsJson[key.toIso8601String()] = value.map((e) => e.toJson()).toList();
+    });
+    await prefs.setString('app_events', jsonEncode(eventsJson));
+  }
+
+  static Future<void> loadPersistentData() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Load User Quotes
+    String? userJson = prefs.getString('user_quotes');
+    if (userJson != null) {
+      Iterable l = jsonDecode(userJson);
+      userQuotes = List<Quote>.from(l.map((model) => Quote.fromJson(model)));
+    }
+    // Load Favorites
+    List<String>? favTexts = prefs.getStringList('fav_quotes');
+    if (favTexts != null) {
+      for (var quote in allQuotes) {
+        if (favTexts.contains(quote.text)) quote.isFavorite = true;
+      }
+    }
+    // Load Agenda Events
+    String? eventsJsonStr = prefs.getString('app_events');
+    if (eventsJsonStr != null) {
+      Map<String, dynamic> decoded = jsonDecode(eventsJsonStr);
+      events = decoded.map((key, value) {
+        return MapEntry(
+          DateTime.parse(key),
+          (value as List).map((e) => AppEvent.fromJson(e)).toList(),
+        );
+      });
+    }
+  }
 
   static Quote getQuoteOfTheDay() {
     int dayOfYear = DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;

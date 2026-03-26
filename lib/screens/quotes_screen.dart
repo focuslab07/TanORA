@@ -12,18 +12,19 @@ class QuotesScreen extends StatefulWidget {
 
 class _QuotesScreenState extends State<QuotesScreen> {
   late Quote dailyQuote;
-  List<Quote> userQuotes = [];
 
   @override
   void initState() {
     super.initState();
     dailyQuote = QuotesData.getQuoteOfTheDay();
+    QuotesData.loadPersistentData().then((_) => setState(() {}));
   }
 
   void _addNewQuote(String text, String category) {
     setState(() {
-      userQuotes.add(Quote(text: text, category: category, isUserCreated: true));
+      QuotesData.userQuotes.add(Quote(text: text, category: category, isUserCreated: true));
     });
+    QuotesData.savePersistentData();
   }
 
   @override
@@ -36,8 +37,13 @@ class _QuotesScreenState extends State<QuotesScreen> {
     return Scaffold(
       backgroundColor: AppColors.primaryBg,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent, 
         elevation: 0,
+        // LOGO ADDED HERE
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/ispm_logo.png', fit: BoxFit.contain),
+        ),
         title: const Text("Daily Inspiration", style: AppStyles.heading),
         actions: [
           IconButton(
@@ -49,10 +55,10 @@ class _QuotesScreenState extends State<QuotesScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, 
           children: [
             _sectionHeader("Quote of the Day", onMore: null),
-            _buildDailyQuoteCard(dailyQuote),
+            Center(child: _buildDailyQuoteCard(dailyQuote)),
             const SizedBox(height: 30),
 
             _sectionHeader("Favorite Quotes", onMore: null),
@@ -60,7 +66,7 @@ class _QuotesScreenState extends State<QuotesScreen> {
             const SizedBox(height: 25),
 
             _sectionHeader("Your Creations", onMore: null),
-            _horizontalQuoteList(userQuotes),
+            _horizontalQuoteList(QuotesData.userQuotes),
             const SizedBox(height: 25),
 
             _sectionHeader("Situations", onMore: null),
@@ -93,6 +99,7 @@ class _QuotesScreenState extends State<QuotesScreen> {
 
   Widget _buildDailyQuoteCard(Quote quote) {
     return Container(
+      constraints: const BoxConstraints(maxWidth: 350), 
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: const DecorationImage(
@@ -125,7 +132,10 @@ class _QuotesScreenState extends State<QuotesScreen> {
                   quote.isFavorite ? Icons.favorite : Icons.favorite_border, 
                   color: quote.isFavorite ? Colors.redAccent : Colors.white,
                 ),
-                onPressed: () => setState(() => quote.isFavorite = !quote.isFavorite),
+                onPressed: () {
+                  setState(() => quote.isFavorite = !quote.isFavorite);
+                  QuotesData.savePersistentData();
+                },
               ),
             )
           ],
@@ -170,7 +180,10 @@ class _QuotesScreenState extends State<QuotesScreen> {
         title: Text(q.text, style: const TextStyle(color: Colors.white70, fontSize: 13)),
         trailing: IconButton(
           icon: Icon(q.isFavorite ? Icons.favorite : Icons.favorite_border, size: 16, color: q.isFavorite ? Colors.redAccent : Colors.white24),
-          onPressed: () => setState(() => q.isFavorite = !q.isFavorite),
+          onPressed: () {
+            setState(() => q.isFavorite = !q.isFavorite);
+            QuotesData.savePersistentData();
+          },
         ),
       )).toList(),
     );
