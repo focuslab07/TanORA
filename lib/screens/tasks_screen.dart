@@ -8,48 +8,53 @@ class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            const Text("Tasks", style: AppStyles.heading),
-            const SizedBox(height: 20),
-            _taskItem("Java app", "Group A", "Done at 14:32", true),
-            _taskItem("Read book", "Group B", "Due 20:00 today", false),
-            _taskItem("Morning run", "Group C", "Due 07:00 tomorrow", false),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentPurple,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              ),
-              child: const Text("New Task", style: TextStyle(color: Colors.white)),
-            )
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text("All Tasks", style: AppStyles.cardTitle),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 18),
+          onPressed: () => Navigator.pop(context),
         ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          _taskListItem("UI/UX Design", "3h 20m left", "Mar 26, 18:00", 0.8, Colors.purpleAccent),
+          _taskListItem("Database Script", "2 days left", "Mar 28, 23:59", 0.4, Colors.orangeAccent),
+          _taskListItem("ISPM Report", "4 days left", "Mar 30, 08:00", 0.1, Colors.blueAccent),
+          _taskListItem("Management Quiz", "Completed", "Mar 24, 10:00", 1.0, Colors.greenAccent),
+        ],
       ),
     );
   }
 
-  Widget _taskItem(String title, String group, String time, bool isDone) {
+  Widget _taskListItem(String title, String time, String date, double prog, Color color) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 15),
       child: GlassContainer(
         padding: const EdgeInsets.all(15),
         child: Row(
           children: [
-            Icon(isDone ? Icons.check_circle : Icons.radio_button_unchecked, 
-                color: isDone ? AppColors.accentPurple : Colors.grey),
+            Container(width: 4, height: 50, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
             const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppStyles.cardTitle),
-                Text("$group · $time", style: AppStyles.subHeading),
-              ],
-            )
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(time, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(date, style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(value: prog, color: color, backgroundColor: Colors.white10, minHeight: 4),
+                ],
+              ),
+            ),
           ],
         ),
       ),
