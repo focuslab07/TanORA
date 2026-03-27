@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 } 
 
 class _HomeScreenState extends State<HomeScreen> { 
-  String currentQuote = "How are you feeling today?"; 
+  String currentQuote = "Ahoana ny fahatsapanao androany?"; 
   String currentEmoji = "✨"; 
 
   @override
@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar( 
         backgroundColor: Colors.transparent, 
         elevation: 0,
-        // LOGO ADDED HERE
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/ispm_logo.png', fit: BoxFit.contain),
@@ -49,32 +48,32 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildMoodSection(), 
             const SizedBox(height: 30), 
 
-            _sectionHeader("Upcoming Events", onMore: () {}), 
+            _sectionHeader("Hetsika ho avy", onMore: () {}), 
             _compactRow([ 
-              _eventCard("Project Demo", "2:00 PM", "March 27", Colors.orange), 
-              _eventCard("Group Meeting", "4:30 PM", "March 28", Colors.blue), 
+              _eventCard("Fampisehoana tetikasa", "2:00 PM", "27 Martsa", Colors.orange), 
+              _eventCard("Fivoriana vondrona", "4:30 PM", "28 Martsa", Colors.blue), 
             ]), 
 
             const SizedBox(height: 25), 
 
-            _sectionHeader("Urgent Deadlines", onMore: () { 
+            _sectionHeader("Asa maika", onMore: () { 
               Navigator.push( 
                 context,  
                 MaterialPageRoute(builder: (context) => const TasksScreen()) 
               ); 
             }), 
             _compactRow([ 
-              _deadlineCard("UI Design", "3h left", "Mar 26, 18:00", 0.8), 
-              _deadlineCard("SQL Script", "2 days left", "Mar 28, 23:59", 0.4), 
+              _deadlineCard("Famolavolana UI", "3 ora sisa", "26 Martsa, 18:00", 0.8), 
+              _deadlineCard("Script SQL", "2 andro sisa", "28 Martsa, 23:59", 0.4), 
             ]), 
              
             const SizedBox(height: 30), 
-            _sectionHeader("Weekly Activity", onMore: () {}), 
+            _sectionHeader("Asa isan-kerinandro", onMore: () {}), 
             Row( 
               children: [ 
-                Expanded(child: _statCard("Most Done", "Coding", "12h", Icons.trending_up, Colors.greenAccent)), 
+                Expanded(child: _statCard("Be indrindra", "Coding", "12h", Icons.trending_up, Colors.greenAccent)), 
                 const SizedBox(width: 15), 
-                Expanded(child: _statCard("Least Done", "Reading", "45m", Icons.trending_down, Colors.redAccent)), 
+                Expanded(child: _statCard("Kely indrindra", "Famakiana", "45m", Icons.trending_down, Colors.redAccent)), 
               ], 
             ), 
             const SizedBox(height: 40), 
@@ -115,10 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Row( 
               mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
               children: [ 
-                _moodBtn("😞", "Difficulties are just tests."), 
-                _moodBtn("😐", "Stay focused on the goal."), 
-                _moodBtn("😊", "You're doing great!"), 
-                _moodBtn("🤩", "Let's innovate today!"), 
+                _moodBtn("😞", "Fitsapana fotsiny ny olana."), 
+                _moodBtn("😐", "Mifantoha amin’ny tanjona."), 
+                _moodBtn("😊", "Tsara ny ataonao!"), 
+                _moodBtn("🤩", "Andao hanavao zavatra androany!"), 
               ], 
             ) 
           ], 
@@ -150,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(12), 
               ), 
               child: const Text( 
-                "See all",  
+                "Hijery rehetra",  
                 style: TextStyle(color: AppColors.accentPurple, fontSize: 12, fontWeight: FontWeight.bold) 
               ), 
             ), 

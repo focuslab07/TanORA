@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoTask {
@@ -7,11 +8,33 @@ class TodoTask {
   bool isCompleted;
 
   TodoTask({
-    required this.id, required this.title, required this.group, 
-    required this.deadline, required this.createdAt, this.isCompleted = false,
+    required this.id, 
+    required this.title, 
+    required this.group, 
+    required this.deadline, 
+    required this.createdAt, 
+    this.isCompleted = false
   });
 
-  // Shrinking Bar Logic (1.0 to 0.0)
+  // --- NEW: Dynamic Color Logic ---
+  Color get groupColor {
+    // A palette that looks good on your dark theme
+    final List<Color> palette = [
+      Colors.blueAccent,
+      Colors.greenAccent,
+      Colors.orangeAccent,
+      Colors.pinkAccent,
+      Colors.cyanAccent,
+      Colors.amberAccent,
+      Colors.deepPurpleAccent,
+      Colors.tealAccent,
+    ];
+    
+    // Hash the group name to a consistent index
+    int hash = group.toLowerCase().trim().codeUnits.fold(0, (prev, element) => prev + element);
+    return palette[hash % palette.length];
+  }
+
   double get timeLeftProgress {
     if (isCompleted) return 0.0;
     final now = DateTime.now();
@@ -24,28 +47,25 @@ class TodoTask {
   Map<String, dynamic> toJson() => {
     'id': id, 'title': title, 'group': group, 
     'deadline': deadline.toIso8601String(), 
-    'createdAt': createdAt.toIso8601String(),
-    'isCompleted': isCompleted,
+    'createdAt': createdAt.toIso8601String(), 
+    'isCompleted': isCompleted
   };
 
   factory TodoTask.fromJson(Map<String, dynamic> json) => TodoTask(
     id: json['id'], title: json['title'], group: json['group'],
-    deadline: DateTime.parse(json['deadline']),
+    deadline: DateTime.parse(json['deadline']), 
     createdAt: DateTime.parse(json['createdAt']),
-    isCompleted: json['isCompleted'] ?? false,
+    isCompleted: json['isCompleted'] ?? false
   );
 }
 
 class TaskStorage {
   static List<TodoTask> tasks = [];
-
-  // NEW: Sorts tasks alphabetically by Group
-  static void sortTasks() {
-    tasks.sort((a, b) => a.group.toLowerCase().compareTo(b.group.toLowerCase()));
-  }
+  
+  static void sortTasks() => tasks.sort((a, b) => a.group.toLowerCase().compareTo(b.group.toLowerCase()));
 
   static Future<void> saveToPhone() async {
-    sortTasks(); // Sort before saving
+    sortTasks();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('tasks_persistence', jsonEncode(tasks.map((t) => t.toJson()).toList()));
   }
@@ -56,7 +76,7 @@ class TaskStorage {
     if (data != null) {
       Iterable decoded = jsonDecode(data);
       tasks = List<TodoTask>.from(decoded.map((m) => TodoTask.fromJson(m)));
-      sortTasks(); // Sort after loading
+      sortTasks();
     }
   }
 }

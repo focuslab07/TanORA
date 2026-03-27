@@ -22,57 +22,66 @@ class _QuotesScreenState extends State<QuotesScreen> {
 
   void _addNewQuote(String text, String category) {
     setState(() {
-      QuotesData.userQuotes.add(Quote(text: text, category: category, isUserCreated: true));
+      QuotesData.userQuotes.add(
+        Quote(text: text, category: category, isUserCreated: true),
+      );
     });
     QuotesData.savePersistentData();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Quote> favorites = QuotesData.allQuotes.where((q) => q.isFavorite).toList();
-    List<Quote> happyQuotes = QuotesData.allQuotes.where((q) => q.category == "Happy").toList();
-    List<Quote> sadQuotes = QuotesData.allQuotes.where((q) => q.category == "Sad").toList();
-    List<Quote> focusQuotes = QuotesData.allQuotes.where((q) => q.category == "Focus").toList();
+    List<Quote> favorites =
+        QuotesData.allQuotes.where((q) => q.isFavorite).toList();
+
+    List<Quote> happyQuotes =
+        QuotesData.allQuotes.where((q) => q.category == "Falifaly").toList();
+
+    List<Quote> sadQuotes =
+        QuotesData.allQuotes.where((q) => q.category == "Malahelo").toList();
+
+    List<Quote> focusQuotes =
+        QuotesData.allQuotes.where((q) => q.category == "Mifantoka").toList();
 
     return Scaffold(
       backgroundColor: AppColors.primaryBg,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, 
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        // LOGO ADDED HERE
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/ispm_logo.png', fit: BoxFit.contain),
         ),
-        title: const Text("Daily Inspiration", style: AppStyles.heading),
+        title: const Text("Aingam-panahy isan’andro", style: AppStyles.heading),
         actions: [
           IconButton(
             onPressed: () => _showCreateQuoteSheet(context),
-            icon: const Icon(Icons.add_circle_outline, color: AppColors.accentPurple),
+            icon: const Icon(Icons.add_circle_outline,
+                color: AppColors.accentPurple),
           ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader("Quote of the Day", onMore: null),
+            _sectionHeader("Tenin’ny andro"),
             Center(child: _buildDailyQuoteCard(dailyQuote)),
             const SizedBox(height: 30),
 
-            _sectionHeader("Favorite Quotes", onMore: null),
+            _sectionHeader("Teny tianao"),
             _horizontalQuoteList(favorites),
             const SizedBox(height: 25),
 
-            _sectionHeader("Your Creations", onMore: null),
+            _sectionHeader("Zavatra noforoninao"),
             _horizontalQuoteList(QuotesData.userQuotes),
             const SizedBox(height: 25),
 
-            _sectionHeader("Situations", onMore: null),
-            _situationCategory("Happy 😊", happyQuotes),
-            _situationCategory("Sad 😞", sadQuotes),
-            _situationCategory("Focus 🎯", focusQuotes),
+            _sectionHeader("Toe-javatra"),
+            _situationCategory("Falifaly 😊", happyQuotes),
+            _situationCategory("Malahelo 😞", sadQuotes),
+            _situationCategory("Mifantoka 🎯", focusQuotes),
             const SizedBox(height: 40),
           ],
         ),
@@ -80,26 +89,16 @@ class _QuotesScreenState extends State<QuotesScreen> {
     );
   }
 
-  Widget _sectionHeader(String title, {VoidCallback? onMore}) {
+  Widget _sectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: AppStyles.cardTitle),
-          if (onMore != null)
-            GestureDetector(
-              onTap: onMore,
-              child: const Text("See all", style: TextStyle(color: AppColors.accentPurple, fontSize: 12)),
-            ),
-        ],
-      ),
+      child: Text(title, style: AppStyles.cardTitle),
     );
   }
 
   Widget _buildDailyQuoteCard(Quote quote) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 350), 
+      constraints: const BoxConstraints(maxWidth: 350),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: const DecorationImage(
@@ -111,17 +110,17 @@ class _QuotesScreenState extends State<QuotesScreen> {
         padding: const EdgeInsets.all(25),
         child: Column(
           children: [
-            const Icon(Icons.format_quote_rounded, color: Colors.white70, size: 30),
+            const Icon(Icons.format_quote_rounded,
+                color: Colors.white70, size: 30),
             const SizedBox(height: 10),
             Text(
               "\"${quote.text}\"",
               textAlign: TextAlign.center,
               style: AppStyles.subHeading.copyWith(
-                fontSize: 18, 
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic, 
+                fontStyle: FontStyle.italic,
                 color: Colors.white,
-                shadows: [const Shadow(offset: Offset(1, 1), blurRadius: 4, color: Colors.black)],
               ),
             ),
             const SizedBox(height: 15),
@@ -129,8 +128,11 @@ class _QuotesScreenState extends State<QuotesScreen> {
               alignment: Alignment.centerRight,
               child: IconButton(
                 icon: Icon(
-                  quote.isFavorite ? Icons.favorite : Icons.favorite_border, 
-                  color: quote.isFavorite ? Colors.redAccent : Colors.white,
+                  quote.isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color:
+                      quote.isFavorite ? Colors.redAccent : Colors.white,
                 ),
                 onPressed: () {
                   setState(() => quote.isFavorite = !quote.isFavorite);
@@ -145,7 +147,13 @@ class _QuotesScreenState extends State<QuotesScreen> {
   }
 
   Widget _horizontalQuoteList(List<Quote> quotes) {
-    if (quotes.isEmpty) return const Text("Nothing here yet.", style: TextStyle(color: Colors.white24, fontSize: 12));
+    if (quotes.isEmpty) {
+      return const Text(
+        "Tsy misy eto aloha.",
+        style: TextStyle(color: Colors.white24, fontSize: 12),
+      );
+    }
+
     return SizedBox(
       height: 120,
       child: ListView.builder(
@@ -161,7 +169,11 @@ class _QuotesScreenState extends State<QuotesScreen> {
                 child: Text(
                   quotes[index].text,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 13, color: Colors.white70, fontStyle: FontStyle.italic),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white70,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ),
@@ -175,72 +187,112 @@ class _QuotesScreenState extends State<QuotesScreen> {
     return ExpansionTile(
       iconColor: AppColors.accentPurple,
       collapsedIconColor: Colors.white38,
-      title: Text(label, style: const TextStyle(color: Colors.white, fontSize: 14)),
-      children: categoryQuotes.map((q) => ListTile(
-        title: Text(q.text, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-        trailing: IconButton(
-          icon: Icon(q.isFavorite ? Icons.favorite : Icons.favorite_border, size: 16, color: q.isFavorite ? Colors.redAccent : Colors.white24),
-          onPressed: () {
-            setState(() => q.isFavorite = !q.isFavorite);
-            QuotesData.savePersistentData();
-          },
-        ),
-      )).toList(),
+      title: Text(label,
+          style: const TextStyle(color: Colors.white, fontSize: 14)),
+      children: categoryQuotes
+          .map(
+            (q) => ListTile(
+              title: Text(q.text,
+                  style: const TextStyle(
+                      color: Colors.white70, fontSize: 13)),
+              trailing: IconButton(
+                icon: Icon(
+                  q.isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  size: 16,
+                  color: q.isFavorite
+                      ? Colors.redAccent
+                      : Colors.white24,
+                ),
+                onPressed: () {
+                  setState(() => q.isFavorite = !q.isFavorite);
+                  QuotesData.savePersistentData();
+                },
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 
   void _showCreateQuoteSheet(BuildContext context) {
     String text = "";
-    String selectedCategory = "Happy";
-    
+    String selectedCategory = "Falifaly";
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: const Color(0xFF161922),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
       builder: (context) => StatefulBuilder(
         builder: (context, setSheetState) => Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 20, left: 20, right: 20, top: 20),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("New Creation", style: AppStyles.cardTitle),
+              const Text("Mamorona vaovao", style: AppStyles.cardTitle),
               const SizedBox(height: 15),
+
               TextField(
                 autofocus: true,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: "Write your inspiration...",
+                  hintText: "Soraty ny aingam-panahinao...",
                   hintStyle: const TextStyle(color: Colors.white24),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.05),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
                 onChanged: (v) => text = v,
               ),
+
               const SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: ["Happy", "Sad", "Focus"].map((cat) => ChoiceChip(
-                  label: Text(cat),
-                  selected: selectedCategory == cat,
-                  onSelected: (val) => setSheetState(() => selectedCategory = cat),
-                  selectedColor: AppColors.accentPurple,
-                )).toList(),
+                children: ["Falifaly", "Malahelo", "Mifantoka"]
+                    .map(
+                      (cat) => ChoiceChip(
+                        label: Text(cat),
+                        selected: selectedCategory == cat,
+                        onSelected: (val) =>
+                            setSheetState(() => selectedCategory = cat),
+                        selectedColor: AppColors.accentPurple,
+                      ),
+                    )
+                    .toList(),
               ),
+
               const SizedBox(height: 20),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accentPurple,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
                   onPressed: () {
-                    if (text.isNotEmpty) _addNewQuote(text, selectedCategory);
+                    if (text.isNotEmpty) {
+                      _addNewQuote(text, selectedCategory);
+                    }
                     Navigator.pop(context);
                   },
-                  child: const Text("Save Quote", style: TextStyle(color: Colors.white)),
+                  child: const Text("Tehirizo",
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

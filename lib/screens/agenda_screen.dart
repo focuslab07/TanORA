@@ -59,7 +59,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/ispm_logo.png', fit: BoxFit.contain),
         ),
-        title: const Text("Student Agenda", style: AppStyles.heading),
+        title: const Text("Agenda Mpianatra", style: AppStyles.heading),
       ),
       body: Column(
         children: [
@@ -118,7 +118,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
     final events = _getEventsForDay(_selectedDay!);
 
     if (events.isEmpty) {
-      return const Center(child: Text("No events for this day.", style: TextStyle(color: Colors.white38)));
+      return const Center(
+        child: Text(
+          "Tsy misy hetsika amin’ity andro ity.",
+          style: TextStyle(color: Colors.white38),
+        ),
+      );
     }
 
     return ListView.builder(
@@ -136,17 +141,29 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(event.title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(event.title,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16)),
                       const SizedBox(height: 4),
-                      Text(event.description, style: const TextStyle(color: Colors.white60, fontSize: 13)),
+                      Text(event.description,
+                          style: const TextStyle(
+                              color: Colors.white60, fontSize: 13)),
                       const SizedBox(height: 4),
-                      Text("Time: ${event.time} | Reminder: ${event.reminder ? 'ON' : 'OFF'}", 
-                        style: const TextStyle(color: AppColors.accentPurple, fontSize: 11, fontWeight: FontWeight.bold)),
+                      Text(
+                        "Ora: ${event.time} | Fampahatsiahivana: ${event.reminder ? 'Mandeha' : 'Maty'}",
+                        style: const TextStyle(
+                            color: AppColors.accentPurple,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
+                  icon: const Icon(Icons.remove_circle_outline,
+                      color: Colors.redAccent),
                   onPressed: () => _deleteEvent(event),
                 )
               ],
@@ -160,62 +177,86 @@ class _AgendaScreenState extends State<AgendaScreen> {
   void _showAddEventSheet(BuildContext context) {
     String name = "";
     String desc = "";
-    String time = "12:00 PM";
+    String time = "12:00";
     bool reminder = false;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: const Color(0xFF161922),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
       builder: (context) => StatefulBuilder(
         builder: (context, setSheetState) => Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 20, left: 20, right: 20, top: 20),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              left: 20,
+              right: 20,
+              top: 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("New Agenda Event", style: AppStyles.cardTitle),
+              const Text("Hetsika vaovao", style: AppStyles.cardTitle),
               const SizedBox(height: 15),
+
               TextField(
                 style: const TextStyle(color: Colors.white),
-                decoration: _inputDecoration("Event Name"),
+                decoration: _inputDecoration("Anaran'ny hetsika"),
                 onChanged: (v) => name = v,
               ),
+
               const SizedBox(height: 10),
+
               TextField(
                 style: const TextStyle(color: Colors.white),
-                decoration: _inputDecoration("Description"),
+                decoration: _inputDecoration("Fanazavana"),
                 onChanged: (v) => desc = v,
               ),
+
               const SizedBox(height: 10),
+
               TextField(
                 style: const TextStyle(color: Colors.white),
-                decoration: _inputDecoration("Time (e.g. 14:00)"),
+                decoration: _inputDecoration("Ora (oh: 14:00)"),
                 onChanged: (v) => time = v,
               ),
+
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text("Set Reminder", style: TextStyle(color: Colors.white, fontSize: 14)),
+                title: const Text("Ampahatsiahivina",
+                    style: TextStyle(color: Colors.white, fontSize: 14)),
                 value: reminder,
                 activeColor: AppColors.accentPurple,
                 onChanged: (v) => setSheetState(() => reminder = v),
               ),
+
               const SizedBox(height: 15),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentPurple, 
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    padding: const EdgeInsets.symmetric(vertical: 15)
+                    backgroundColor: AppColors.accentPurple,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   onPressed: () {
                     if (name.isNotEmpty) {
-                      _addEvent(AppEvent(title: name, description: desc, date: _selectedDay!, time: time, reminder: reminder));
+                      _addEvent(AppEvent(
+                        title: name,
+                        description: desc,
+                        date: _selectedDay!,
+                        time: time,
+                        reminder: reminder,
+                      ));
                     }
                     Navigator.pop(context);
                   },
-                  child: const Text("Create Event", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text("Hamorona hetsika",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -231,8 +272,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
       hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
       filled: true,
       fillColor: Colors.white.withOpacity(0.05),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
     );
   }
 }
